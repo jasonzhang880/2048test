@@ -61,4 +61,20 @@ public class GameView extends GridLayout {
             }
         });
     }
+
+    private void swipeLeft() {
+
+    }
+
+    private void swipeRight() {
+
+    }
+
+    private void swipeUp() {
+
+    }
+
+    private void swipeDown() {
+
+    }
 }
