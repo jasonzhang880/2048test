@@ -29,7 +29,12 @@ public class Card extends FrameLayout {
 
     public void setNum(int num) {
         this.num = num;
-        lable.setText(num+"");
+
+        if(num<=0) {
+            lable.setText("");
+        }else {
+            lable.setText(num + "");
+        }
     }
 
     public boolean equals(Card c) {
