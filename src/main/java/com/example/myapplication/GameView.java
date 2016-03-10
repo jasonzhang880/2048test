@@ -10,6 +10,7 @@ import android.widget.GridLayout;
  * Created by Administrator on 2016/3/9.
  */
 public class GameView extends GridLayout {
+    private Card[][] cardsMap=new Card[4][4];
     public GameView(Context context) {
         super(context);
         initGameView();
@@ -29,6 +30,9 @@ public class GameView extends GridLayout {
 //        super(context, attrs, defStyleAttr, defStyleRes);
 //    }
     private void initGameView( ) {
+
+        setColumnCount(4);
+        setBackgroundColor(0xffbbada0);
         setOnTouchListener(new OnTouchListener() {
             private float startX,startY,offsetX,offsetY;
             @Override
@@ -60,6 +64,25 @@ public class GameView extends GridLayout {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        int cardWidth=(Math.min(w,h)-10)/4;
+
+        addCards(cardWidth,cardWidth);
+    }
+
+    public void addCards(int cardWidth,int cardHeight) {
+        Card c;
+        for (int i=0;i<4;i++) {
+            for (int j=0;j<4;j++) {
+                c=new Card(getContext());
+                c.setNum(2);
+                addView(c,cardWidth,cardHeight);
+            }
+        }
     }
 
     private void swipeLeft() {
