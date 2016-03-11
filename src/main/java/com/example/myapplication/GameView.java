@@ -52,7 +52,7 @@ public class GameView extends GridLayout {
                         startY = motionEvent.getY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        offsetX=motionEvent.getX()-startY;
+                        offsetX=motionEvent.getX()-startX;
                         offsetY=motionEvent.getY()-startY;
 
                         if(Math.abs(offsetX)>Math.abs(offsetY)) {
