@@ -16,7 +16,9 @@ import java.util.List;
  */
 public class GameView extends GridLayout {
     public static String Tag="randomNum";
+    //
     private Card[][] cardsMap=new Card[4][4];
+    //空卡片数组
     private List<Point> emptyPoints=new ArrayList<>();
 
     public GameView(Context context) {
@@ -145,18 +147,74 @@ public class GameView extends GridLayout {
         }
         addRandomNum();
         addRandomNum();
-
     }
 
     private void swipeRight() {
+        for (int column=3;column>=0;column--) {
+            for (int row=0;row<4;row++) {
+                for (int columnPointer=column-1;columnPointer>=0;columnPointer--) {
+                    if (cardsMap[row][columnPointer].getNum()>0) {
+                        if (cardsMap[row][column].getNum()<=0) {
+                            cardsMap[row][column].setNum(cardsMap[row][columnPointer].getNum());
+                            cardsMap[row][columnPointer].setNum(0);
 
+                            row--;
+                            break;
+                        } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
+                            cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
+                            cardsMap[row][columnPointer].setNum(0);
+                        }
+                    }
+                }
+            }
+        }
+        addRandomNum();
+        addRandomNum();
     }
 
     private void swipeUp() {
+        for (int row=0;row<4;row++) {
+            for (int column=0;column<4;column++) {
+                for (int rowPointer=row+1;rowPointer<4;rowPointer++) {
+                    if (cardsMap[rowPointer][column].getNum()>0) {
+                        if (cardsMap[row][column].getNum()<=0) {
+                            cardsMap[row][column].setNum(cardsMap[rowPointer][column].getNum());
+                            cardsMap[rowPointer][column].setNum(0);
 
+                            column--;
+                            break;
+                        } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
+                            cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
+                            cardsMap[rowPointer][column].setNum(0);
+                        }
+                    }
+                }
+            }
+        }
+        addRandomNum();
+        addRandomNum();
     }
 
     private void swipeDown() {
+        for (int row=3;row>=0;row--) {
+            for (int column=0;column<4;column++) {
+                for (int rowPointer=row-1;rowPointer>=0;rowPointer--) {
+                    if (cardsMap[rowPointer][column].getNum()>0) {
+                        if (cardsMap[row][column].getNum()<=0) {
+                            cardsMap[row][column].setNum(cardsMap[rowPointer][column].getNum());
+                            cardsMap[rowPointer][column].setNum(0);
 
+                            column--;
+                            break;
+                        } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
+                            cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
+                            cardsMap[rowPointer][column].setNum(0);
+                        }
+                    }
+                }
+            }
+        }
+        addRandomNum();
+        addRandomNum();
     }
 }
