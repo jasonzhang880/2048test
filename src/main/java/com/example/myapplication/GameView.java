@@ -57,16 +57,16 @@ public class GameView extends GridLayout {
 
                         if(Math.abs(offsetX)>Math.abs(offsetY)) {
                             if(offsetX<-5) {
-                                System.out.println("left");
+                                swipeLeft();
                             }
                             else if (offsetX>-5)
-                                System.out.println("right");
+                                swipeRight();
                         }else {
                             if (offsetY<-5) {
-                                System.out.println("up");
+                                swipeUp();
                             }
                             else if (offsetY>-5)
-                                System.out.println("down");
+                                swipeDown();
                         }
                         break;
                 }
@@ -102,6 +102,7 @@ public class GameView extends GridLayout {
         for (int y=0;y<4;y++) {
             for(int x=0;x<4;x++) {
                 if (cardsMap[x][y].getNum()<=0) {
+                    //所有空值卡片加入
                     emptyPoints.add(new Point(x,y));
                 }
             }
@@ -124,6 +125,26 @@ public class GameView extends GridLayout {
     }
 
     private void swipeLeft() {
+        for (int column=0;column<4;column++) {
+            for (int row=0;row<4;row++) {
+                for (int columnPointer=column+1;columnPointer<4;columnPointer++) {
+                    if (cardsMap[row][columnPointer].getNum()>0) {
+                        if (cardsMap[row][column].getNum()<=0) {
+                            cardsMap[row][column].setNum(cardsMap[row][columnPointer].getNum());
+                            cardsMap[row][columnPointer].setNum(0);
+
+                            row--;
+                            break;
+                        } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
+                            cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
+                            cardsMap[row][columnPointer].setNum(0);
+                        }
+                    }
+                }
+            }
+        }
+        addRandomNum();
+        addRandomNum();
 
     }
 
