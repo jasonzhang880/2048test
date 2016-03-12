@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -45,7 +47,8 @@ public class GameView extends GridLayout {
         setBackgroundColor(0xffbbada0);
 
         setOnTouchListener(new OnTouchListener() {
-            private float startX,startY,offsetX,offsetY;
+            private float startX, startY, offsetX, offsetY;
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -54,20 +57,18 @@ public class GameView extends GridLayout {
                         startY = motionEvent.getY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        offsetX=motionEvent.getX()-startX;
-                        offsetY=motionEvent.getY()-startY;
+                        offsetX = motionEvent.getX() - startX;
+                        offsetY = motionEvent.getY() - startY;
 
-                        if(Math.abs(offsetX)>Math.abs(offsetY)) {
-                            if(offsetX<-5) {
+                        if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                            if (offsetX < -5) {
                                 swipeLeft();
-                            }
-                            else if (offsetX>-5)
+                            } else if (offsetX > -5)
                                 swipeRight();
-                        }else {
-                            if (offsetY<-5) {
+                        } else {
+                            if (offsetY < -5) {
                                 swipeUp();
-                            }
-                            else if (offsetY>-5)
+                            } else if (offsetY > -5)
                                 swipeDown();
                         }
                         break;
@@ -82,7 +83,7 @@ public class GameView extends GridLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         int cardWidth=(Math.min(w,h)-10)/4;
 
-        addCards(cardWidth,cardWidth);
+        addCards(cardWidth, cardWidth);
         startGame();
     }
 
@@ -111,10 +112,11 @@ public class GameView extends GridLayout {
         }
         //随机取出一个点
         Point p=emptyPoints.remove((int)(Math.random()*emptyPoints.size()));
-        cardsMap[p.x][p.y].setNum(Math.random()>0.1?2:4);
+        cardsMap[p.x][p.y].setNum(Math.random() > 0.1 ? 2 : 4);
     }
 
     private void startGame( ) {
+        MainActivity.getMainActivity().clearScore();
         for (int y=0;y<4;y++) {
             for (int x=0;x<4;x++)
                 cardsMap[x][y].setNum(0);
@@ -123,10 +125,12 @@ public class GameView extends GridLayout {
         addRandomNum();
         Log.d(Tag,".............第一个数");
         addRandomNum();
-        Log.d(Tag,".............第一个数");
+        Log.d(Tag, ".............第一个数");
     }
 
     private void swipeLeft() {
+
+        boolean merge=false;
         for (int column=0;column<4;column++) {
             for (int row=0;row<4;row++) {
                 for (int columnPointer=column+1;columnPointer<4;columnPointer++) {
@@ -134,24 +138,28 @@ public class GameView extends GridLayout {
                         if (cardsMap[row][column].getNum()<=0) {
                             cardsMap[row][column].setNum(cardsMap[row][columnPointer].getNum());
                             cardsMap[row][columnPointer].setNum(0);
-
+                            merge=true;
                             row--;
-                            break;
                         } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[row][columnPointer].setNum(0);
-
-                            break;
+                            merge=true;
+                            MainActivity.getMainActivity().addScore(cardsMap[row][column].getNum());
                         }
+                        break;
                     }
                 }
             }
         }
+        if (merge) {
         addRandomNum();
-        addRandomNum();
+        checkEnd();
+        }
     }
 
     private void swipeRight() {
+
+        boolean merge=false;
         for (int column=3;column>=0;column--) {
             for (int row=0;row<4;row++) {
                 for (int columnPointer=column-1;columnPointer>=0;columnPointer--) {
@@ -159,24 +167,27 @@ public class GameView extends GridLayout {
                         if (cardsMap[row][column].getNum()<=0) {
                             cardsMap[row][column].setNum(cardsMap[row][columnPointer].getNum());
                             cardsMap[row][columnPointer].setNum(0);
-
+                            merge=true;
                             row--;
-                            break;
                         } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[row][columnPointer].setNum(0);
-
-                            break;
+                            merge=true;
+                            MainActivity.getMainActivity().addScore(cardsMap[row][column].getNum());
                         }
+                        break;
                     }
                 }
             }
         }
-        addRandomNum();
-        addRandomNum();
+        if (merge) {
+            addRandomNum();
+            checkEnd();
+        }
     }
 
     private void swipeUp() {
+        boolean merge=false;
         for (int row=0;row<4;row++) {
             for (int column=0;column<4;column++) {
                 for (int rowPointer=row+1;rowPointer<4;rowPointer++) {
@@ -184,24 +195,27 @@ public class GameView extends GridLayout {
                         if (cardsMap[row][column].getNum()<=0) {
                             cardsMap[row][column].setNum(cardsMap[rowPointer][column].getNum());
                             cardsMap[rowPointer][column].setNum(0);
-
+                            merge=true;
                             column--;
-                            break;
                         } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[rowPointer][column].setNum(0);
-
-                            break;
+                            merge=true;
+                            MainActivity.getMainActivity().addScore(cardsMap[row][column].getNum());
                         }
+                        break;
                     }
                 }
             }
         }
-        addRandomNum();
-        addRandomNum();
+        if (merge) {
+            addRandomNum();
+            checkEnd();
+        }
     }
 
     private void swipeDown() {
+        boolean merge=false;
         for (int row=3;row>=0;row--) {
             for (int column=0;column<4;column++) {
                 for (int rowPointer=row-1;rowPointer>=0;rowPointer--) {
@@ -211,18 +225,53 @@ public class GameView extends GridLayout {
                             cardsMap[rowPointer][column].setNum(0);
 
                             column--;
-                            break;
                         } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[rowPointer][column].setNum(0);
-
-                            break;
+                            MainActivity.getMainActivity().addScore(cardsMap[row][column].getNum());
                         }
+                        break;
                     }
                 }
             }
         }
-        addRandomNum();
-        addRandomNum();
+        if (merge) {
+            addRandomNum();
+            checkEnd();
+        }
+    }
+
+    private void checkEnd( ) {
+        boolean isEnd=false;
+        boolean equalLeft=false;
+        boolean equalUp=false;
+        boolean equalRight=false;
+        boolean equalDown=false;
+        if (emptyPoints.isEmpty()) {
+            for (int i=0;i<4;i++) {
+                for (int j=0;j<4;j++) {
+                    if(j>0&&(cardsMap[i][j].equals(cardsMap[i][j-1])))
+                        equalLeft=true;
+                    if(i>0&&(cardsMap[i][j].equals(cardsMap[i-1][j])))
+                        equalUp=true;
+                    if(j<3&&(cardsMap[i][j].equals(cardsMap[i][j+1])))
+                        equalRight=true;
+                    if(i<3&&(cardsMap[i][j].equals(cardsMap[i+1][j])))
+                        equalDown=true;
+                }
+            }
+            if(!equalLeft&&!equalUp&&!equalDown&&!equalRight)
+                isEnd=true;
+        }
+        if (isEnd) {
+            new AlertDialog.Builder(getContext()).setTitle("您好")
+                    .setMessage("游戏结束了")
+                    .setPositiveButton("重来", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startGame();
+                        }
+                    }).show();
+        }
     }
 }
