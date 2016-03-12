@@ -140,6 +140,8 @@ public class GameView extends GridLayout {
                         } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[row][columnPointer].setNum(0);
+
+                            break;
                         }
                     }
                 }
@@ -163,6 +165,8 @@ public class GameView extends GridLayout {
                         } else if (cardsMap[row][column].equals(cardsMap[row][columnPointer])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[row][columnPointer].setNum(0);
+
+                            break;
                         }
                     }
                 }
@@ -186,6 +190,8 @@ public class GameView extends GridLayout {
                         } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[rowPointer][column].setNum(0);
+
+                            break;
                         }
                     }
                 }
@@ -209,6 +215,8 @@ public class GameView extends GridLayout {
                         } else if (cardsMap[row][column].equals(cardsMap[rowPointer][column])) {
                             cardsMap[row][column].setNum(cardsMap[row][column].getNum()*2);
                             cardsMap[rowPointer][column].setNum(0);
+
+                            break;
                         }
                     }
                 }
